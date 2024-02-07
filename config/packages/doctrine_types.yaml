@@ -1,0 +1,7 @@
+doctrine:
+  dbal:
+    types:
+      credit_uuid: App\Entity\Id\Credit\CreditUuidType
+      user_uuid: App\Entity\Id\User\UserUuidType
+      transaction_uuid: App\Entity\Id\Transaction\TransactionUuidType
+      big_decimal: App\Doctrine\BigDecimalType
