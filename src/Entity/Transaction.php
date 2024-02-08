@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Doctrine\BigDecimalType;
-use App\Entity\Id\Credit\CreditUuid;
+use App\Entity\Id\Request\RequestUuid;
 use App\Entity\Id\Transaction\TransactionUuid;
 use App\Entity\Id\Transaction\TransactionUuidType;
 use App\Enum\TransactionActionType;
@@ -37,6 +37,10 @@ readonly class Transaction implements Entity
     #[JoinColumn(nullable: false)]
     public Credit $credit;
 
+    #[ManyToOne(targetEntity: Request::class)]
+    #[JoinColumn(nullable: false)]
+    public Request $request;
+
     #[Column(type: Types::STRING, nullable: false, enumType: TransactionActionType::class)]
     public TransactionActionType $action;
 
@@ -49,6 +53,7 @@ readonly class Transaction implements Entity
     public function __construct(
         User $user,
         Credit $credit,
+        Request $request,
         TransactionActionType $action,
         BigDecimal $amount,
     ) {
@@ -60,6 +65,7 @@ readonly class Transaction implements Entity
         }
         $this->user = $user;
         $this->credit = $credit;
+        $this->request = $request;
 
         if ($action->isNegative() && !$amount->isNegative() || !$action->isNegative() && $amount->isNegative()) {
             $amount = $amount->negated();
@@ -72,13 +78,14 @@ readonly class Transaction implements Entity
         $this->createdAt = new DateTimeImmutable('now', new DateTimeZone('UTC'));
     }
 
-    public static function createExpiredAndMarkCreditAsExpired(Credit $credit, BigDecimal $expiredAmount): self
+    public static function createExpiredAndMarkCreditAsExpired(Credit $credit, BigDecimal $expiredAmount, Request $request): self
     {
         $credit->markAsExpired($expiredAmount);
 
         return new self(
             $credit->user,
             $credit,
+            $request,
             TransactionActionType::Expiration,
             $expiredAmount,
         );

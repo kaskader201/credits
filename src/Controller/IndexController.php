@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Credit;
+use App\Entity\Request;
 use App\Entity\Transaction;
 use App\Entity\User;
 use App\Provider\DateTimeProvider;
@@ -62,7 +63,7 @@ table th {
             $body .= "<tr>
                         <td>{$user->id->toString()}</td>
                         <td>{$user->externalId}</td>
-                        <td>{$user->createdAt->format(DateTimeProvider::FORMAT_TZ)}</td>
+                        <td>{$user->createdAt->format(DateTimeProvider::FORMAT)}</td>
                     </tr>";
         }
         $body .= '</table>';
@@ -95,10 +96,10 @@ table th {
                         <td>{$credit->amount}</td>
                         <td>{$credit->priority->value}</td>
                         <td>{$credit->type->value}</td>
-                        <td>{$credit->expiredAt?->format(DateTimeProvider::FORMAT_TZ)}</td>
+                        <td>{$credit->expiredAt?->format(DateTimeProvider::FORMAT)}</td>
                         <td>{$usable}</td>
-                        <td>{$credit->createdAt->format(DateTimeProvider::FORMAT_TZ)}</td>
-                        <td>{$credit->getFullyUsedAt()?->format(DateTimeProvider::FORMAT_TZ)}</td>
+                        <td>{$credit->createdAt->format(DateTimeProvider::FORMAT)}</td>
+                        <td>{$credit->getFullyUsedAt()?->format(DateTimeProvider::FORMAT)}</td>
                         <td>{$credit->getExpiredAmount()}</td>
                     </tr>";
         }
@@ -119,6 +120,7 @@ table th {
                         <th>credit_id</th>
                         <th>action</th>
                         <th>amount</th>
+                        <th>RequestId</th>
                         <th>createdAt</th>
                     </tr>';
         foreach ($transactions as $transaction) {
@@ -128,11 +130,43 @@ table th {
                         <td>{$transaction->credit->id->toString()}</td>
                         <td>{$transaction->action->value}</td>
                         <td>{$transaction->amount}</td>
-                        <td>{$transaction->createdAt->format(DateTimeProvider::FORMAT_TZ)}</td>
+                        <td>{$transaction->request->id->toString()}</td>
+                        <td>{$transaction->createdAt->format(DateTimeProvider::FORMAT)}</td>
                     </tr>";
         }
         $body .= '</table>';
 
+        /** @var Request[] $requests */
+        $requests = $this->entityManager->createQueryBuilder()
+            ->select('r')
+            ->from(Request::class, 'r')
+            ->orderBy('r.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        $body .= '<h1>Request log</h1><table>
+                    <tr>
+                        <th>id</th>
+                        <th>user_id</th>
+                        <th>RequestId</th>
+                        <th>amount</th>
+                        <th>operation</th>
+                        <th>data</th>
+                        <th>createdAt</th>
+                    </tr>';
+        foreach ($requests as $request) {
+            $body .= "<tr>
+                        <td>{$request->id->toString()}</td>
+                        <td>{$request->user->id->toString()}</td>
+                        <td>{$request->requestId}</td>
+                        <td>{$request->amount}</td>
+                        <td>{$request->operation->value}</td>
+                        <td>{$request->getDataAsJson()}</td>
+          
+                        <td>{$request->createdAt->format(DateTimeProvider::FORMAT)}</td>
+                    </tr>";
+        }
+        $body .= '</table>';
 
         $body .= '</body></html>';
         return new Response($body, 200, ['Content-Type' => 'text/html']);

@@ -22,10 +22,13 @@ class BalanceController extends AbstractController
     }
 
     #[Route(path: 'v1/balance', name: 'get_balance', methods: ['GET'])]
-    public function addCreditAction(#[MapQueryParameter] string $userExternalId): Response
+    public function getBalanceAction(#[MapQueryParameter] string $userExternalId, #[MapQueryParameter] string $requestId): Response
     {
         try {
-            $balance = $this->actualBalanceService->getBalance(new GetBalanceInput($userExternalId));
+            $balance = $this->actualBalanceService->getBalance(
+                new GetBalanceInput($requestId, $userExternalId),
+                null,
+            );
             return new JsonResponse(['balance' => $balance], Response::HTTP_CREATED);
         } catch (UserNotFoundException) {
             return new JsonResponse("Unknown user `{$userExternalId}`", Response::HTTP_NOT_FOUND);

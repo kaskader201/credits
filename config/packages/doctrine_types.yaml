@@ -1,6 +1,7 @@
 doctrine:
   dbal:
     types:
+      request_uuid: App\Entity\Id\Request\RequestUuidType
       credit_uuid: App\Entity\Id\Credit\CreditUuidType
       user_uuid: App\Entity\Id\User\UserUuidType
       transaction_uuid: App\Entity\Id\Transaction\TransactionUuidType

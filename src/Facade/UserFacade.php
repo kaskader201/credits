@@ -7,11 +7,8 @@ namespace App\Facade;
 use App\Entity\User;
 use App\Exception\UserAlreadyExistException;
 use App\Exception\UserNotFoundException;
-use App\Input\AddCreditInput;
 use App\Input\CreateUserInput;
 use App\Repository\UserRepository;
-use App\Service\AddCreditService;
-use App\Service\ExpirationCreditService;
 use Doctrine\ORM\EntityManagerInterface;
 
 final readonly class UserFacade

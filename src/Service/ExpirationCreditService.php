@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Entity\Id\Request\RequestUuid;
+use App\Entity\Request;
 use App\Entity\Transaction;
 use App\Exception\LogicException;
 use App\Exception\UserNotFoundException;
 use App\Repository\CreditRepository;
+use App\Repository\RequestRepository;
 use App\Repository\UserRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,16 +23,17 @@ final readonly class ExpirationCreditService
         private CreditRepository $creditRepository,
         private CreditService $creditService,
         private UserRepository $userRepository,
+        private RequestRepository $requestRepository,
     ) {
     }
 
     /**
      * @throws UserNotFoundException
      */
-    public function expireCredits(?UuidInterface $userExternalId, ?DateTimeImmutable $now = null): void
+    public function expireCredits(?UuidInterface $userExternalId, RequestUuid $requestUuid, ?DateTimeImmutable $now = null): void
     {
         $this->entityManager->clear();
-        $this->entityManager->wrapInTransaction(function (EntityManagerInterface $entityManager) use ($userExternalId, $now): void {
+        $this->entityManager->wrapInTransaction(function (EntityManagerInterface $entityManager) use ($userExternalId, $requestUuid, $now): void {
             if ($userExternalId === null) {
                 $expiredCredits = $this->creditRepository->findAllUnUsedButExpiredForAll($now);
             } else {
@@ -44,7 +48,11 @@ final readonly class ExpirationCreditService
                     );
                 }
                 $entityManager->persist(
-                    Transaction::createExpiredAndMarkCreditAsExpired($credit, $usableAmount),
+                    Transaction::createExpiredAndMarkCreditAsExpired(
+                        $credit,
+                        $usableAmount,
+                        $this->requestRepository->getById($requestUuid),
+                    ),
                 );
             }
         });

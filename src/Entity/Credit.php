@@ -59,7 +59,6 @@ class Credit implements Entity
     #[Column(type: Types::DATETIMETZ_IMMUTABLE, nullable: false)]
     public readonly DateTimeImmutable $createdAt;
 
-
     public function __construct(
         User $user,
         BigDecimal $amount,

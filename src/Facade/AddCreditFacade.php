@@ -8,11 +8,13 @@ use App\Exception\UserNotFoundException;
 use App\Input\AddCreditInput;
 use App\Service\AddCreditService;
 use App\Service\ExpirationCreditService;
+use App\Service\RequestService;
 
 final readonly class AddCreditFacade
 {
     public function __construct(
         private AddCreditService $addCreditService,
+        private RequestService $requestService,
         private ExpirationCreditService $expirationCreditService,
     ) {
     }
@@ -22,7 +24,8 @@ final readonly class AddCreditFacade
      */
     public function addCredits(AddCreditInput $inputData): void
     {
-        $this->expirationCreditService->expireCredits($inputData->userExternalId);
+        $requestUuid = $this->requestService->createRequest($inputData);
+        $this->expirationCreditService->expireCredits($inputData->userExternalId, $requestUuid);
 
         $this->addCreditService->addCredit(
             $inputData->amount,
@@ -31,6 +34,7 @@ final readonly class AddCreditFacade
             $inputData->type,
             $inputData->expiredAt,
             $inputData->note,
+            $requestUuid,
         );
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Id\Request\RequestUuid;
 use App\Exception\UserNotFoundException;
 use App\Input\GetBalanceInput;
 use App\Repository\CreditRepository;
@@ -17,15 +18,19 @@ final readonly class ActualBalanceService
         private UserRepository $userRepository,
         private CreditService $creditService,
         private ExpirationCreditService $expirationCreditService,
+        private RequestService $requestService,
     ) {
     }
 
     /**
      * @throws UserNotFoundException|MathException
      */
-    public function getBalance(GetBalanceInput $input): BigDecimal
+    public function getBalance(GetBalanceInput $input, ?RequestUuid $requestUuid): BigDecimal
     {
-        $this->expirationCreditService->expireCredits($input->userExternalId);
+        if ($requestUuid === null) {
+            $requestUuid = $this->requestService->createRequest($input);
+        }
+        $this->expirationCreditService->expireCredits($input->userExternalId, $requestUuid);
         return $this->calculateBalance($input->userExternalId);
     }
 

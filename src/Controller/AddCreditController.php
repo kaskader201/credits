@@ -31,7 +31,7 @@ class AddCreditController extends AbstractController
             return new JsonResponse("Unknown user `{$input->userExternalId->toString()}`", Response::HTTP_NOT_FOUND);
         } catch (Throwable $e) {
             $this->logger->error($e->getMessage(), $e->getTrace());
-            return new JsonResponse('Eror: ' . $e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse('Error: ' . $e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }
