@@ -3,10 +3,12 @@
 namespace App\Facade;
 
 use App\Exception\BalanceToLowException;
+use App\Exception\UserNotFoundException;
+use App\Input\GetBalanceInput;
+use App\Input\UseCreditInput;
 use App\Service\ActualBalanceService;
 use App\Service\UseCreditService;
-use Ramsey\Uuid\UuidInterface;
-use Brick\Math\BigDecimal;
+use Brick\Math\Exception\MathException;
 
 class UseCreditFacade
 {
@@ -17,15 +19,19 @@ class UseCreditFacade
     ) {
     }
 
+    /**
+     * @throws BalanceToLowException
+     * @throws UserNotFoundException
+     * @throws MathException
+     */
     public function useCredits(
-        BigDecimal $amount,
-        UuidInterface $userExternalId,
+        UseCreditInput $input
     ): void {
-        $balance = $this->actualBalanceService->getBalance($userExternalId);
-        if ($balance->isLessThan($amount)) {
+        $balance = $this->actualBalanceService->getBalance(GetBalanceInput::fromUseCreditInput($input));
+        if ($balance->isLessThan($input->amount)) {
             throw BalanceToLowException::create($balance);
         }
 
-        $this->useCreditService->useCredit($amount, $userExternalId);
+        $this->useCreditService->useCredit($input->amount, $input->userExternalId);
     }
 }

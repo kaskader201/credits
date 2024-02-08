@@ -3,8 +3,10 @@
 namespace App\Service;
 
 use App\Exception\UserNotFoundException;
+use App\Input\GetBalanceInput;
 use App\Repository\CreditRepository;
 use App\Repository\UserRepository;
+use Brick\Math\Exception\MathException;
 use Ramsey\Uuid\UuidInterface;
 use Brick\Math\BigDecimal;
 
@@ -19,16 +21,16 @@ final readonly class ActualBalanceService
     }
 
     /**
-     * @throws UserNotFoundException
+     * @throws UserNotFoundException|MathException
      */
-    public function getBalance(UuidInterface $userExternalId): BigDecimal
+    public function getBalance(GetBalanceInput $input): BigDecimal
     {
-        $this->expirationCreditService->expireCredits($userExternalId);
-        return $this->calculateBalance($userExternalId);
+        $this->expirationCreditService->expireCredits($input->userExternalId);
+        return $this->calculateBalance($input->userExternalId);
     }
 
     /**
-     * @throws UserNotFoundException|\Brick\Math\Exception\MathException
+     * @throws UserNotFoundException|MathException
      */
     private function calculateBalance(UuidInterface $userExternalId): BigDecimal
     {

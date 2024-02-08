@@ -1,22 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Input;
 
-use Brick\Math\BigDecimal;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
-final readonly class UseCreditInput
+final readonly class GetBalanceInput
 {
 
-    public BigDecimal $amount;
     public UuidInterface $userExternalId;
+
     public function __construct(
-        float $amount,
         string $userExternalId,
     ) {
-        $this->amount = BigDecimal::of($amount);
         $this->userExternalId = Uuid::fromString($userExternalId);
     }
 
+    public static function fromUseCreditInput(UseCreditInput $input): self
+    {
+        return new self($input->userExternalId->toString());
+    }
 }

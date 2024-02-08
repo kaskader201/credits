@@ -88,20 +88,20 @@ table th {
                         <th>FullyUsedAt</th>
                         <th>ExpiredAmount</th>
                     </tr>';
-        foreach ($credits as $transaction) {
+        foreach ($credits as $credit) {
 
-            $usable = $transaction->getUsable() ? 'yes' : 'no';
+            $usable = $credit->getUsable() ? 'yes' : 'no';
             $body .= "<tr>
-                        <td>{$transaction->id->toString()}</td>
-                        <td>{$transaction->user->id->toString()}</td>
-                        <td>{$transaction->amount}</td>
-                        <td>{$transaction->priority->value}</td>
-                        <td>{$transaction->type->value}</td>
-                        <td>{$transaction->expiredAt?->format(DateTimeProvider::FORMAT_TZ)}</td>
+                        <td>{$credit->id->toString()}</td>
+                        <td>{$credit->user->id->toString()}</td>
+                        <td>{$credit->amount}</td>
+                        <td>{$credit->priority->value}</td>
+                        <td>{$credit->type->value}</td>
+                        <td>{$credit->expiredAt?->format(DateTimeProvider::FORMAT_TZ)}</td>
                         <td>{$usable}</td>
-                        <td>{$transaction->createdAt->format(DateTimeProvider::FORMAT_TZ)}</td>
-                        <td>{$transaction->getFullyUsedAt()?->format(DateTimeProvider::FORMAT_TZ)}</td>
-                        <td>{$transaction->getExpiredAmount()}</td>
+                        <td>{$credit->createdAt->format(DateTimeProvider::FORMAT_TZ)}</td>
+                        <td>{$credit->getFullyUsedAt()?->format(DateTimeProvider::FORMAT_TZ)}</td>
+                        <td>{$credit->getExpiredAmount()}</td>
                     </tr>";
         }
         $body .= '</table>';
@@ -121,6 +121,7 @@ table th {
                         <th>credit_id</th>
                         <th>action</th>
                         <th>amount</th>
+                        <th>createdAt</th>
                     </tr>';
         foreach ($transactions as $transaction) {
             $body .= "<tr>
@@ -129,6 +130,7 @@ table th {
                         <td>{$transaction->credit->id->toString()}</td>
                         <td>{$transaction->action->value}</td>
                         <td>{$transaction->amount}</td>
+                        <td>{$transaction->createdAt->format(DateTimeProvider::FORMAT_TZ)}</td>
                     </tr>";
         }
         $body .= '</table>';
