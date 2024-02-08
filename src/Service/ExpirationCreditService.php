@@ -8,9 +8,9 @@ use App\Entity\Transaction;
 use App\Exception\UserNotFoundException;
 use App\Repository\CreditRepository;
 use App\Repository\UserRepository;
-use App\Uuid\UuidInterface;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
+use Ramsey\Uuid\UuidInterface;
 
 final readonly class ExpirationCreditService
 {
@@ -35,7 +35,6 @@ final readonly class ExpirationCreditService
                 $user = $this->userRepository->getByExternalId($userExternalId);
                 $expiredCredits = $this->creditRepository->findAllUnUsedButExpiredForUser($user, $now);
             }
-
             foreach ($expiredCredits as $credit){
                 $usableAmount = $this->creditService->getUsableAmountOfCredit($credit);
                 $entityManager->persist(Transaction::createExpiredAndMarkCreditAsExpired($credit, $usableAmount));

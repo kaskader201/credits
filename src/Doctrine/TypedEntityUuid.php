@@ -2,8 +2,9 @@
 
 namespace App\Doctrine;
 
-use App\Uuid\UuidInterface;
-use App\Uuid\UuidProvider;
+
+use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\UuidInterface;
 
 abstract class TypedEntityUuid
 {
@@ -11,7 +12,7 @@ abstract class TypedEntityUuid
 
     final private function __construct(?UuidInterface $original = null)
     {
-        $this->original = $original ?? UuidProvider::uuid7();
+        $this->original = $original ?? Uuid::uuid7();
     }
 
     public static function generate(): static

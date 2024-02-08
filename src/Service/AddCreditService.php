@@ -9,7 +9,7 @@ use App\Enum\CreditType;
 use App\Enum\TransactionActionType;
 use App\Exception\UserNotFoundException;
 use App\Repository\UserRepository;
-use App\Uuid\UuidInterface;
+use Ramsey\Uuid\UuidInterface;
 use Brick\Math\BigDecimal;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;

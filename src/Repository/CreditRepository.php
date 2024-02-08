@@ -30,7 +30,7 @@ readonly class CreditRepository
         return $this->entityManager->createQueryBuilder()
             ->select('c')
             ->from(Credit::class, 'c')
-            ->andWhere('c.usable = 1')
+            ->andWhere('c.usable = true')
             ->andWhere('c.user = :user')
             ->setParameter('user', $user, UserUuidType::NAME)
             ->getQuery()
@@ -45,7 +45,7 @@ readonly class CreditRepository
         return $this->entityManager->createQueryBuilder()
             ->select('c')
             ->from(Credit::class, 'c')
-            ->andWhere('c.usable = 1')
+            ->andWhere('c.usable = true')
             ->andWhere('c.user = :user')
             ->setParameter('user', $user, UserUuidType::NAME)
             ->orderBy('c.priority', 'ASC')
@@ -63,11 +63,11 @@ readonly class CreditRepository
         return $this->entityManager->createQueryBuilder()
             ->select('c')
             ->from(Credit::class, 'c')
-            ->andWhere('c.usable = 1')
+            ->andWhere('c.usable = true')
             ->andWhere('c.expiredAt < :now')
             ->andWhere('c.user = :user')
             ->setParameter('user', $user, UserUuidType::NAME)
-            ->setParameter('now', $now, Types::DATE_IMMUTABLE)
+            ->setParameter('now', $now, Types::DATETIME_IMMUTABLE)
             ->getQuery()
             ->getResult();
     }
@@ -81,9 +81,9 @@ readonly class CreditRepository
         return $this->entityManager->createQueryBuilder()
             ->select('c')
             ->from(Credit::class, 'c')
-            ->andWhere('c.usable = 1')
+            ->andWhere('c.usable = true')
             ->andWhere('c.expiredAt < :now')
-            ->setParameter('now', $now, Types::DATE_IMMUTABLE)
+            ->setParameter('now', $now, Types::DATETIME_IMMUTABLE)
             ->getQuery()
             ->getResult();
     }

@@ -4,10 +4,11 @@ namespace App\Input;
 
 use App\Enum\CreditPriority;
 use App\Enum\CreditType;
-use App\Uuid\UuidInterface;
-use App\Uuid\UuidProvider;
+
 use Brick\Math\BigDecimal;
 use DateTimeImmutable;
+use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\UuidInterface;
 
 final readonly class UseCreditInput
 {
@@ -28,7 +29,7 @@ final readonly class UseCreditInput
         ?string $note,
     ) {
         $this->amount = BigDecimal::of($amount);
-        $this->userExternalId = UuidProvider::fromString($userExternalId);
+        $this->userExternalId = Uuid::fromString($userExternalId);
         $this->creditPriority = CreditPriority::from($creditPriority);
         $this->type = CreditType::from($type);
         $this->expiredAt = $expiredAt !== null ? new DateTimeImmutable($expiredAt) : null;

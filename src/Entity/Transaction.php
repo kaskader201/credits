@@ -11,6 +11,7 @@ use App\Enum\TransactionActionType;
 use App\Exception\LogicException;
 use Brick\Math\BigDecimal;
 use DateTimeImmutable;
+use DateTimeZone;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Column;
@@ -21,7 +22,7 @@ use Doctrine\ORM\Mapping\ManyToOne;
 #[ORM\Entity]
 #[ORM\Index(name: 'USER_CREDIT', columns: ['user_id','credit_id'])]
 #[ORM\Index(name: 'USER_CREATED_AT', columns: ['user_id', 'created_at'])]
-class Transaction
+class Transaction implements Entity
 {
 
     #[Id]
@@ -42,7 +43,7 @@ class Transaction
     #[Column(type: BigDecimalType::NAME, precision: 36, scale: 2, nullable: false)]
     public readonly BigDecimal $amount;
 
-    #[Column(type: Types::DATE_IMMUTABLE, nullable: false)]
+    #[Column(type: Types::DATETIMETZ_IMMUTABLE, nullable: false)]
     public readonly DateTimeImmutable $createdAt;
 
     public function __construct(
@@ -65,7 +66,7 @@ class Transaction
         }
         $this->action = $action;
         $this->amount = $amount;
-        $this->createdAt = new DateTimeImmutable();
+        $this->createdAt = new DateTimeImmutable('now', new DateTimeZone('UTC'));
     }
 
     public static function createExpiredAndMarkCreditAsExpired(Credit $credit, BigDecimal $expiredAmount): self

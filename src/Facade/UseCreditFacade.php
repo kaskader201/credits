@@ -5,7 +5,7 @@ namespace App\Facade;
 use App\Exception\BalanceToLowException;
 use App\Service\ActualBalanceService;
 use App\Service\UseCreditService;
-use App\Uuid\UuidInterface;
+use Ramsey\Uuid\UuidInterface;
 use Brick\Math\BigDecimal;
 
 class UseCreditFacade

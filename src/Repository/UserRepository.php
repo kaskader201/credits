@@ -6,7 +6,7 @@ namespace App\Repository;
 
 use App\Entity\User;
 use App\Exception\UserNotFoundException;
-use App\Uuid\UuidInterface;
+use Ramsey\Uuid\UuidInterface;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -27,7 +27,7 @@ readonly class UserRepository
             ->select('u')
             ->from(User::class, 'u')
             ->andWhere('u.externalId = :externalId')
-            ->setParameter('externalId', $externalId)
+            ->setParameter('externalId', $externalId->toString())
             ->getQuery()
             ->getOneOrNullResult(AbstractQuery::HYDRATE_OBJECT);
 

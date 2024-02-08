@@ -11,6 +11,7 @@ use App\Enum\CreditPriority;
 use App\Enum\CreditType;
 use Brick\Math\BigDecimal;
 use DateTimeImmutable;
+use DateTimeZone;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Column;
@@ -21,7 +22,7 @@ use Doctrine\ORM\Mapping\ManyToOne;
 #[ORM\Entity]
 #[ORM\Index(name: 'USABLE_PRIORITY_EXPIRATION', columns: ['usable','priority','expired_at'])]
 #[ORM\Index(name: 'USABLE_USER_PRIORITY_EXPIRATION', columns: ['usable','user_id','priority','expired_at'])]
-class Credit
+class Credit implements Entity
 {
 
     #[Id]
@@ -35,7 +36,7 @@ class Credit
     #[Column(type: BigDecimalType::NAME, precision: 36, scale: 2, nullable: false)]
     public readonly BigDecimal $amount;
 
-    #[Column(type: Types::STRING, nullable: false, enumType: CreditPriority::class)]
+    #[Column(type: Types::INTEGER, nullable: false, enumType: CreditPriority::class)]
     public readonly CreditPriority $priority;
 
     #[Column(type: Types::STRING, nullable: false, enumType: CreditType::class)]
@@ -44,19 +45,19 @@ class Credit
     #[Column(type: Types::STRING, nullable: true)]
     public readonly ?string $note;
 
-    #[Column(type: Types::DATE_IMMUTABLE, nullable: true)]
+    #[Column(type: Types::DATETIMETZ_IMMUTABLE, nullable: true)]
     public readonly ?DateTimeImmutable $expiredAt;
 
     #[Column(type: Types::BOOLEAN, nullable: true)]
     private ?true $usable;
 
-    #[Column(type: Types::DATE_IMMUTABLE, nullable: true)]
+    #[Column(type: Types::DATETIMETZ_IMMUTABLE, nullable: true)]
     private ?DateTimeImmutable $fullyUsedAt;
 
     #[Column(type: BigDecimalType::NAME, precision: 36, scale: 2, nullable: false)]
     private BigDecimal $expiredAmount;
 
-    #[Column(type: Types::DATE_IMMUTABLE, nullable: false)]
+    #[Column(type: Types::DATETIMETZ_IMMUTABLE, nullable: false)]
     public readonly DateTimeImmutable $createdAt;
 
 
@@ -79,17 +80,7 @@ class Credit
         $this->usable = true;
         $this->fullyUsedAt = null;
         $this->expiredAmount = BigDecimal::zero();
-        $this->createdAt = new DateTimeImmutable();
-    }
-
-    public function getPriority(): CreditPriority
-    {
-        return $this->priority;
-    }
-
-    public function getType(): CreditType
-    {
-        return $this->type;
+        $this->createdAt = new DateTimeImmutable('now', new DateTimeZone('UTC'));
     }
 
     public function getUsable(): bool
@@ -109,7 +100,27 @@ class Credit
     public function markAsFullyUsed(): void
     {
         $this->usable = null;
-        $this->fullyUsedAt = new DateTimeImmutable();;
+        $this->fullyUsedAt = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+    }
+
+    public function getPriority(): CreditPriority
+    {
+        return $this->priority;
+    }
+
+    public function getType(): CreditType
+    {
+        return $this->type;
+    }
+
+    public function getFullyUsedAt(): ?DateTimeImmutable
+    {
+        return $this->fullyUsedAt;
+    }
+
+    public function getExpiredAmount(): BigDecimal
+    {
+        return $this->expiredAmount;
     }
 
 }

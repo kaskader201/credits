@@ -2,6 +2,7 @@
 
 namespace App\Doctrine;
 
+use App\Entity\Entity;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
@@ -32,7 +33,7 @@ abstract class Uuid7Type extends Type
         }
 
         $uuidClass = static::getUuidClass();
-        return $uuidClass::wrap(Uuid::fromBytes($value));
+        return $uuidClass::wrap(Uuid::fromBytes(stream_get_contents($value)));
     }
 
     public function convertToDatabaseValue(
@@ -47,7 +48,9 @@ abstract class Uuid7Type extends Type
         if ($value instanceof TypedEntityUuid) {
             return $value->getBytes();
         }
-
+        if (is_a($value, Entity::class)) {
+            return $value->id->getBytes();
+        }
         if (is_string($value)) {
             try {
                 /** @throws UuidExceptionInterface */
@@ -57,7 +60,7 @@ abstract class Uuid7Type extends Type
             }
         }
 
-        throw new LogicException('Unexpected value: ' . get_debug_type($value));
+        throw new LogicException('Unexpected UUID 7 value: ' . get_debug_type($value));
     }
 
     /**

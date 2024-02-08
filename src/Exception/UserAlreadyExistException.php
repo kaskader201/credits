@@ -4,12 +4,12 @@ namespace App\Exception;
 
 use Ramsey\Uuid\UuidInterface;
 
-class UserNotFoundException extends RuntimeException
+class UserAlreadyExistException extends RuntimeException
 {
 
     public static function byExternalId(UuidInterface $externalId): self
     {
-        return new self("User with external id '{$externalId->toString()}' not found");
+        return new self("User with external id '{$externalId->toString()}' already exist");
     }
 
 }

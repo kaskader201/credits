@@ -5,7 +5,7 @@ namespace App\Service;
 use App\Exception\UserNotFoundException;
 use App\Repository\CreditRepository;
 use App\Repository\UserRepository;
-use App\Uuid\UuidInterface;
+use Ramsey\Uuid\UuidInterface;
 use Brick\Math\BigDecimal;
 
 final readonly class ActualBalanceService

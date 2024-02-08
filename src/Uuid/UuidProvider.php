@@ -6,16 +6,8 @@ namespace App\Uuid;
 
 use Ramsey\Uuid\Uuid;
 
-class UuidProvider extends Uuid implements UuidInterface
+class UuidProvider extends Uuid
 {
 
-    public static function fromString(string $uuid): UuidInterface
-    {
-        $result = parent::fromString($uuid);
-        if (!($result instanceof UuidInterface)) {
-            throw new \RuntimeException('Invalid type');
-        }
 
-        return $result;
-    }
 }
