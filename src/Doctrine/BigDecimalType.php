@@ -1,5 +1,7 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
+
 namespace App\Doctrine;
 
 use Brick\Math\BigDecimal;
@@ -9,7 +11,6 @@ use UnexpectedValueException;
 
 class BigDecimalType extends Type
 {
-
     public const NAME = 'big_decimal';
     /**
      * {@inheritdoc}
@@ -30,7 +31,7 @@ class BigDecimalType extends Type
     /**
      * {@inheritdoc}
      *
-     * @return BigDecimal
+     * @return BigDecimal|null
      */
     public function convertToPHPValue($value, AbstractPlatform $platform): mixed
     {

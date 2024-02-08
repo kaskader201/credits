@@ -9,7 +9,6 @@ use Ramsey\Uuid\UuidInterface;
 
 final readonly class GetBalanceInput
 {
-
     public UuidInterface $userExternalId;
 
     public function __construct(

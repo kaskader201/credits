@@ -61,7 +61,6 @@ final readonly class AddCreditService
                 );
                 $entityManager->persist($credit);
                 $entityManager->persist($transaction);
-
             }
         );
         $this->entityManager->clear();

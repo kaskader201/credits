@@ -8,5 +8,4 @@ use App\Doctrine\TypedEntityUuid;
 
 class CreditUuid extends TypedEntityUuid
 {
-
 }

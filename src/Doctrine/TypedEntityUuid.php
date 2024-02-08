@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Doctrine;
+declare(strict_types=1);
 
+namespace App\Doctrine;
 
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;

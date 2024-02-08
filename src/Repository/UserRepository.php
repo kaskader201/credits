@@ -12,7 +12,6 @@ use Doctrine\ORM\EntityManagerInterface;
 
 readonly class UserRepository
 {
-
     public function __construct(
         private EntityManagerInterface $entityManager,
     ) {

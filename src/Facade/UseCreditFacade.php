@@ -12,7 +12,6 @@ use Brick\Math\Exception\MathException;
 
 class UseCreditFacade
 {
-
     public function __construct(
         private ActualBalanceService $actualBalanceService,
         private UseCreditService $useCreditService,

@@ -15,5 +15,4 @@ class DateTimeProvider
     {
         return new DateTimeImmutable('now', new DateTimeZone('UTC'));
     }
-
 }

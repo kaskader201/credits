@@ -24,7 +24,6 @@ use Doctrine\ORM\Mapping\ManyToOne;
 #[ORM\Index(name: 'USABLE_USER_PRIORITY_EXPIRATION', columns: ['usable','user_id','priority','expired_at'])]
 class Credit implements Entity
 {
-
     #[Id]
     #[Column(type: CreditUuidType::NAME, nullable: false)]
     public readonly CreditUuid $id;
@@ -69,7 +68,8 @@ class Credit implements Entity
         ?DateTimeImmutable $expiredAt,
         ?string $note,
     ) {
-        $this->id = CreditUuid::generate();;
+        $this->id = CreditUuid::generate();
+        ;
         $this->user = $user;
         $this->amount = $amount;
         $this->priority = $priority;
@@ -83,12 +83,12 @@ class Credit implements Entity
         $this->createdAt = new DateTimeImmutable('now', new DateTimeZone('UTC'));
     }
 
-    public function getUsable(): bool
+    public function isUsable(): bool
     {
         return $this->usable === true;
     }
 
-    public function markAsExpired(BigDecimal $expiredAmount)
+    public function markAsExpired(BigDecimal $expiredAmount): void
     {
         if ($this->amount->isLessThan($expiredAmount)) {
             throw new \LogicException("Cannot expired more than the total amount on {$this->id->toString()}.");
@@ -103,16 +103,6 @@ class Credit implements Entity
         $this->fullyUsedAt = new DateTimeImmutable('now', new DateTimeZone('UTC'));
     }
 
-    public function getPriority(): CreditPriority
-    {
-        return $this->priority;
-    }
-
-    public function getType(): CreditType
-    {
-        return $this->type;
-    }
-
     public function getFullyUsedAt(): ?DateTimeImmutable
     {
         return $this->fullyUsedAt;
@@ -123,4 +113,8 @@ class Credit implements Entity
         return $this->expiredAmount;
     }
 
+    public function getId(): CreditUuid
+    {
+        return $this->id;
+    }
 }

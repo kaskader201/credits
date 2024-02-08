@@ -1,4 +1,56 @@
-# Symfony Docker
+# Credits
+
+## Create User:
+* POST
+* https://localhost/v1/user
+* ```json
+    {"userExternalId": "5c4132cd-4f65-4b22-9c94-bc3d8113aba6"}
+  ```
+## Add Credits:
+* POST
+* https://localhost/v1/credit
+* ```json
+    {
+        "amount": 10,
+        "userExternalId": "5c4132cd-4f65-4b22-9c94-bc3d8113aba6",
+        "creditPriority" : 1,
+        "type" : "refund",
+        "expiredAt": null,
+        "note":"normal"
+    }
+  ```
+* ```json
+    {
+        "amount": 15,
+        "userExternalId": "5c4132cd-4f65-4b22-9c94-bc3d8113aba6",
+        "creditPriority" : 2,
+        "type" : "marketing",
+        "expiredAt": "2024-02-08 13:25:00",
+        "note":"expired"
+    }
+  ```
+## Spend Credits:
+* POST
+* https://localhost/v1/credit/spend
+* ```json
+    {
+        "userExternalId": "7c44dcd0-f17b-479c-a896-bb64e8df7f9f",
+        "amount":50
+    }
+  ```
+## Get Balance:
+* POST
+* https://localhost/v1/balance?userExternalId=5c4132cd-4f65-4b22-9c94-bc3d8113aba6
+
+
+------------------------
+
+
+
+
+
+# Symfony Docke
+
 
 A [Docker](https://www.docker.com/)-based installer and runtime for the [Symfony](https://symfony.com) web framework,
 with [FrankenPHP](https://frankenphp.dev) and [Caddy](https://caddyserver.com/) inside!

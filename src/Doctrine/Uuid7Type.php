@@ -3,27 +3,21 @@
 namespace App\Doctrine;
 
 use App\Entity\Entity;
+use App\Exception\LogicException;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
-use LogicException;
-use Ramsey\Uuid\Exception\UuidExceptionInterface;
 use Ramsey\Uuid\Uuid;
 
-/**
- * @template T of TypedEntityUuid
- */
 abstract class Uuid7Type extends Type
 {
     /**
-     * @param string|T|null $value
-     * @return T|null
+     * {@inheritdoc}
      */
     public function convertToPHPValue(
         mixed $value,
         AbstractPlatform $platform,
-    ): ?TypedEntityUuid
-    {
+    ): ?TypedEntityUuid {
         if ($value === null) {
             return null;
         }
@@ -33,14 +27,17 @@ abstract class Uuid7Type extends Type
         }
 
         $uuidClass = static::getUuidClass();
-        return $uuidClass::wrap(Uuid::fromBytes(stream_get_contents($value)));
+        $content = stream_get_contents($value);
+        if ($content === false) {
+            throw new LogicException('Content is not e resource');
+        }
+        return $uuidClass::wrap(Uuid::fromBytes($content));
     }
 
     public function convertToDatabaseValue(
         mixed $value,
         AbstractPlatform $platform,
-    ): ?string
-    {
+    ): ?string {
         if ($value === null) {
             return null;
         }
@@ -49,44 +46,30 @@ abstract class Uuid7Type extends Type
             return $value->getBytes();
         }
         if (is_a($value, Entity::class)) {
-            return $value->id->getBytes();
-        }
-        if (is_string($value)) {
-            try {
-                /** @throws UuidExceptionInterface */
-                return Uuid::fromBytes($value)->getBytes();
-            } catch (UuidExceptionInterface $e) {
-                throw new LogicException('Trying to fetch entity by invalid (or not binary-uuid) string ' . $value, $e);
-            }
+            return $value->getId()->getBytes();
         }
 
-        throw new LogicException('Unexpected UUID 7 value: ' . get_debug_type($value));
+        try {
+            return Uuid::fromBytes($value)->getBytes();
+        } catch (\Throwable $e) {
+            throw LogicException::fromException($e);
+        }
     }
 
-    /**
-     * @return class-string<T>
-     */
     abstract public static function getUuidClass(): string;
 
     public function getSQLDeclaration(
         array $column,
         AbstractPlatform $platform,
-    ): string
-    {
+    ): string {
         return $platform->getBinaryTypeDeclarationSQL([
             'length' => 16,
             'fixed' => true,
         ]);
     }
 
-    public function requiresSQLCommentHint(AbstractPlatform $platform): bool
-    {
-        return true;
-    }
-
     public function getBindingType(): ParameterType
     {
         return ParameterType::BINARY;
     }
-
 }

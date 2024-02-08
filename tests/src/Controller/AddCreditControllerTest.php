@@ -37,7 +37,6 @@ class AddCreditControllerTest extends WebTestCase
                 'note' => null,
             ],
         );
-        self::assertSame(201, $client->getResponse()->getStatusCode(), $client->getResponse()->getContent());
-
+        self::assertSame(201, $client->getResponse()->getStatusCode());
     }
 }

@@ -29,5 +29,4 @@ readonly class TransactionRepository
             ->getQuery()
             ->getResult();
     }
-
 }

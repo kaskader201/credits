@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Entity\Transaction;
+use App\Exception\LogicException;
 use App\Exception\UserNotFoundException;
 use App\Repository\CreditRepository;
 use App\Repository\UserRepository;
@@ -35,9 +36,16 @@ final readonly class ExpirationCreditService
                 $user = $this->userRepository->getByExternalId($userExternalId);
                 $expiredCredits = $this->creditRepository->findAllUnUsedButExpiredForUser($user, $now);
             }
-            foreach ($expiredCredits as $credit){
+            foreach ($expiredCredits as $credit) {
                 $usableAmount = $this->creditService->getUsableAmountOfCredit($credit);
-                $entityManager->persist(Transaction::createExpiredAndMarkCreditAsExpired($credit, $usableAmount));
+                if ($usableAmount->isLessThan(0)) {
+                    throw new LogicException(
+                        "Error on Expiration Credit {$credit->getId()->toString()}, Negative expired amount.",
+                    );
+                }
+                $entityManager->persist(
+                    Transaction::createExpiredAndMarkCreditAsExpired($credit, $usableAmount),
+                );
             }
         });
         $this->entityManager->clear();

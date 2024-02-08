@@ -13,7 +13,6 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
-
 readonly class CreditRepository
 {
     public function __construct(
@@ -87,5 +86,4 @@ readonly class CreditRepository
             ->getQuery()
             ->getResult();
     }
-
 }

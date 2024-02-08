@@ -32,7 +32,7 @@ final readonly class ActualBalanceService
     /**
      * @throws UserNotFoundException|MathException
      */
-    private function calculateBalance(UuidInterface $userExternalId): BigDecimal
+    public function calculateBalance(UuidInterface $userExternalId): BigDecimal
     {
         $user = $this->userRepository->getByExternalId($userExternalId);
         $usableCredits = $this->creditRepository->findAllUsable($user);

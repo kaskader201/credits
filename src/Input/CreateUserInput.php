@@ -9,7 +9,6 @@ use Ramsey\Uuid\UuidInterface;
 
 final readonly class CreateUserInput
 {
-
     public UuidInterface $userExternalId;
 
     public function __construct(
@@ -17,5 +16,4 @@ final readonly class CreateUserInput
     ) {
         $this->userExternalId = Uuid::fromString($userExternalId);
     }
-
 }

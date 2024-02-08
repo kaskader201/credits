@@ -13,7 +13,6 @@ use Ramsey\Uuid\UuidInterface;
 
 final readonly class AddCreditInput
 {
-
     public BigDecimal $amount;
     public UuidInterface $userExternalId;
     public CreditPriority $creditPriority;
@@ -36,5 +35,4 @@ final readonly class AddCreditInput
         $this->expiredAt = $expiredAt !== null ? new DateTimeImmutable($expiredAt) : null;
         $this->note = $note;
     }
-
 }

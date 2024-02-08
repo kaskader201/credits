@@ -7,7 +7,6 @@ namespace App\Controller;
 use App\Exception\UserNotFoundException;
 use App\Facade\AddCreditFacade;
 use App\Input\AddCreditInput;
-use App\Input\CreateUserInput;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -15,7 +14,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Throwable;
-
 
 class AddCreditController extends AbstractController
 {
@@ -33,8 +31,7 @@ class AddCreditController extends AbstractController
             return new JsonResponse("Unknown user `{$input->userExternalId->toString()}`", Response::HTTP_NOT_FOUND);
         } catch (Throwable $e) {
             $this->logger->error($e->getMessage(), $e->getTrace());
-            return new JsonResponse('Eror: '. $e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse('Eror: ' . $e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-
 }

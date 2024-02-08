@@ -38,25 +38,25 @@ final readonly class UseCreditService
             ): void {
                 $user = $this->userRepository->getByExternalId($userExternalId);
                 $credits = $this->creditRepository->findAllUsableSorted($user);
-                $total = $amount;
+                $totalOfAmount = $amount;
                 foreach ($credits as $credit) {
                     $usableAmount = $this->creditService->getUsableAmountOfCredit($credit);
-
-                    if ($total->isGreaterThanOrEqualTo($usableAmount)) {
+                    if ($totalOfAmount->isGreaterThanOrEqualTo($usableAmount)) {
                         $credit->markAsFullyUsed();
                     }
+                    $newTotalOfAmount = $totalOfAmount->minus($usableAmount);
 
-                    $total = $total->minus($usableAmount);
                     $transaction = new Transaction(
                         $user,
                         $credit,
                         TransactionActionType::CreditUse,
-                        $amount,
+                        $newTotalOfAmount->isLessThanOrEqualTo(BigDecimal::zero()) ? $totalOfAmount : $usableAmount,
                     );
                     $entityManager->persist($transaction);
-                    if ($total->isZero()) {
+                    if ($newTotalOfAmount->isLessThanOrEqualTo(BigDecimal::zero())) {
                         break;
                     }
+                    $totalOfAmount = $newTotalOfAmount;
                 }
             }
         );

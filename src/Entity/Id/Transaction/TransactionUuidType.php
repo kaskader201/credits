@@ -6,12 +6,8 @@ namespace App\Entity\Id\Transaction;
 
 use App\Doctrine\Uuid7Type;
 
-/**
- * @template-extends Uuid7Type<TransactionUuid>
- */
 class TransactionUuidType extends Uuid7Type
 {
-
     final public const NAME = 'transaction_uuid';
 
     public function getName(): string

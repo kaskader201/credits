@@ -16,7 +16,6 @@ use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Throwable;
 
-
 class UseCreditController extends AbstractController
 {
     public function __construct(private UseCreditFacade $useCreditFacade, private LoggerInterface $logger)
@@ -38,5 +37,4 @@ class UseCreditController extends AbstractController
             return new JsonResponse('Error: ' . $e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-
 }

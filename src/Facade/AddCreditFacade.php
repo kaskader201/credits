@@ -11,7 +11,6 @@ use App\Service\ExpirationCreditService;
 
 final readonly class AddCreditFacade
 {
-
     public function __construct(
         private AddCreditService $addCreditService,
         private ExpirationCreditService $expirationCreditService,
@@ -34,5 +33,4 @@ final readonly class AddCreditFacade
             $inputData->note,
         );
     }
-
 }

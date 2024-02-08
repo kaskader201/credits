@@ -1,15 +1,14 @@
 <?php
 
+declare(strict_types=1);
 
 namespace App\Controller;
 
 use App\Entity\Credit;
 use App\Entity\Transaction;
 use App\Entity\User;
-use App\Facade\AddCreditFacade;
 use App\Provider\DateTimeProvider;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -20,7 +19,7 @@ class IndexController extends AbstractController
     {
     }
     #[Route(path: '/', name: 'index', methods: ['GET'])]
-    public function indexAction()
+    public function indexAction(): Response
     {
         $body = '<html><head>
                     <style>table {
@@ -89,8 +88,7 @@ table th {
                         <th>ExpiredAmount</th>
                     </tr>';
         foreach ($credits as $credit) {
-
-            $usable = $credit->getUsable() ? 'yes' : 'no';
+            $usable = $credit->isUsable() ? 'yes' : 'no';
             $body .= "<tr>
                         <td>{$credit->id->toString()}</td>
                         <td>{$credit->user->id->toString()}</td>

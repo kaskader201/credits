@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Doctrine\BigDecimalType;
+use App\Entity\Id\Credit\CreditUuid;
 use App\Entity\Id\Transaction\TransactionUuid;
 use App\Entity\Id\Transaction\TransactionUuidType;
 use App\Enum\TransactionActionType;
@@ -22,29 +23,28 @@ use Doctrine\ORM\Mapping\ManyToOne;
 #[ORM\Entity]
 #[ORM\Index(name: 'USER_CREDIT', columns: ['user_id','credit_id'])]
 #[ORM\Index(name: 'USER_CREATED_AT', columns: ['user_id', 'created_at'])]
-class Transaction implements Entity
+readonly class Transaction implements Entity
 {
-
     #[Id]
     #[Column(type: TransactionUuidType::NAME, nullable: false)]
-    public readonly TransactionUuid $id;
+    public TransactionUuid $id;
 
     #[ManyToOne(targetEntity: User::class)]
     #[JoinColumn(nullable: false)]
-    public readonly User $user;
+    public User $user;
 
     #[ManyToOne(targetEntity: Credit::class)]
     #[JoinColumn(nullable: false)]
-    public readonly Credit $credit;
+    public Credit $credit;
 
     #[Column(type: Types::STRING, nullable: false, enumType: TransactionActionType::class)]
-    public readonly TransactionActionType $action;
+    public TransactionActionType $action;
 
     #[Column(type: BigDecimalType::NAME, precision: 36, scale: 2, nullable: false)]
-    public readonly BigDecimal $amount;
+    public BigDecimal $amount;
 
     #[Column(type: Types::DATETIMETZ_IMMUTABLE, nullable: false)]
-    public readonly DateTimeImmutable $createdAt;
+    public DateTimeImmutable $createdAt;
 
     public function __construct(
         User $user,
@@ -64,6 +64,9 @@ class Transaction implements Entity
         if ($action->isNegative() && !$amount->isNegative() || !$action->isNegative() && $amount->isNegative()) {
             $amount = $amount->negated();
         }
+        if ($credit->amount->abs()->isLessThan($amount)) {
+            throw new LogicException("Transaction amount is less than or equal to $amount");
+        }
         $this->action = $action;
         $this->amount = $amount;
         $this->createdAt = new DateTimeImmutable('now', new DateTimeZone('UTC'));
@@ -81,4 +84,8 @@ class Transaction implements Entity
         );
     }
 
+    public function getId(): TransactionUuid
+    {
+        return $this->id;
+    }
 }

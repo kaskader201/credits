@@ -11,8 +11,7 @@ class LogicException extends \LogicException
     public function __construct(
         string $message,
         ?Throwable $previous = null,
-    )
-    {
+    ) {
         parent::__construct($message, 0, $previous);
     }
 
@@ -20,5 +19,4 @@ class LogicException extends \LogicException
     {
         return new self($e->getMessage(), $e);
     }
-
 }

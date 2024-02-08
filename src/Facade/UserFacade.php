@@ -16,7 +16,6 @@ use Doctrine\ORM\EntityManagerInterface;
 
 final readonly class UserFacade
 {
-
     public function __construct(
         private UserRepository $userRepository,
         private EntityManagerInterface $entityManager,
@@ -39,5 +38,4 @@ final readonly class UserFacade
             );
         }
     }
-
 }

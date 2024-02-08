@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Entity\Id\Transaction\TransactionUuid;
 use App\Entity\Id\User\UserUuid;
 use App\Entity\Id\User\UserUuidType;
 use DateTimeImmutable;
@@ -17,9 +18,8 @@ use Doctrine\ORM\Mapping\Id;
 #[ORM\Table(name: self::TABLE_NAME)]
 #[ORM\Index(name: 'EXTERNAL_ID', columns: ['external_id'])]
 #[ORM\UniqueConstraint(name: 'EXTERNAL_ID', columns: ['external_id'])]
-final readonly class User implements Entity
+readonly class User implements Entity
 {
-
     final public const TABLE_NAME = '"user"';
 
     #[Id]
@@ -40,4 +40,8 @@ final readonly class User implements Entity
         $this->createdAt = new DateTimeImmutable('now', new DateTimeZone('UTC'));
     }
 
+    public function getId(): UserUuid
+    {
+        return $this->id;
+    }
 }

@@ -8,7 +8,6 @@ use Ramsey\Uuid\UuidInterface;
 
 final readonly class UseCreditInput
 {
-
     public BigDecimal $amount;
     public UuidInterface $userExternalId;
     public function __construct(
@@ -18,5 +17,4 @@ final readonly class UseCreditInput
         $this->amount = BigDecimal::of($amount);
         $this->userExternalId = Uuid::fromString($userExternalId);
     }
-
 }
