@@ -29,11 +29,20 @@ class UseCreditFacade
         UseCreditInput $input
     ): void {
         $requestUuid = $this->requestService->createRequest($input);
-        $balance = $this->actualBalanceService->getBalance(GetBalanceInput::fromUseCreditInput($input), $requestUuid);
+
+        $balance = $this->actualBalanceService->getBalance(
+            GetBalanceInput::fromUseCreditInput($input),
+            $requestUuid,
+        );
+
         if ($balance->isLessThan($input->amount)) {
             throw BalanceToLowException::create($balance);
         }
 
-        $this->useCreditService->useCredit($input->amount, $input->userExternalId, $requestUuid);
+        $this->useCreditService->useCredit(
+            $input->amount,
+            $input->userExternalId,
+            $requestUuid,
+        );
     }
 }

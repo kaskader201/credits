@@ -20,7 +20,7 @@ final readonly class GetBalanceInput implements \JsonSerializable
 
     public static function fromUseCreditInput(UseCreditInput $input): self
     {
-        return new self('Neutral', $input->userExternalId->toString());
+        return new self($input->requestId, $input->userExternalId->toString());
     }
 
     #[\Override] public function jsonSerialize(): array

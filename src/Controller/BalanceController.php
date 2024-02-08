@@ -29,7 +29,7 @@ class BalanceController extends AbstractController
                 new GetBalanceInput($requestId, $userExternalId),
                 null,
             );
-            return new JsonResponse(['balance' => $balance], Response::HTTP_CREATED);
+            return new JsonResponse(['balance' => $balance], Response::HTTP_OK);
         } catch (UserNotFoundException) {
             return new JsonResponse("Unknown user `{$userExternalId}`", Response::HTTP_NOT_FOUND);
         } catch (Throwable $e) {

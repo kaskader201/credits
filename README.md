@@ -16,7 +16,8 @@
         "creditPriority" : 1,
         "type" : "refund",
         "expiredAt": null,
-        "note":"normal"
+        "note":"normal",
+        "requestId": "random-string"
     }
   ```
 * ```json
@@ -26,7 +27,8 @@
         "creditPriority" : 2,
         "type" : "marketing",
         "expiredAt": "2024-02-08 13:25:00",
-        "note":"expired"
+        "note":"expired",
+        "requestId": "random-string"
     }
   ```
 ## Spend Credits:
@@ -35,12 +37,13 @@
 * ```json
     {
         "userExternalId": "7c44dcd0-f17b-479c-a896-bb64e8df7f9f",
-        "amount":50
+        "amount":50,
+        "requestId": "random-string"
     }
   ```
 ## Get Balance:
 * POST
-* https://localhost/v1/balance?userExternalId=5c4132cd-4f65-4b22-9c94-bc3d8113aba6
+* https://localhost/v1/balance?userExternalId=5c4132cd-4f65-4b22-9c94-bc3d8113aba6&requestId=random-string
 
 
 ------------------------

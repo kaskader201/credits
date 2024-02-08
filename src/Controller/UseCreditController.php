@@ -23,7 +23,7 @@ class UseCreditController extends AbstractController
     }
 
     #[Route(path: 'v1/credit/spend', name: 'useCredit', methods: ['POST'])]
-    public function addCreditAction(#[MapRequestPayload] UseCreditInput $input): Response
+    public function useCreaditAction(#[MapRequestPayload] UseCreditInput $input): Response
     {
         try {
             $this->useCreditFacade->useCredits($input);
