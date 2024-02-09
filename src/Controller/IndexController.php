@@ -201,7 +201,6 @@ table th {
                         <th>is usable</th>
                         <th>createdAt</th>
                         <th>FullyUsedAt</th>
-                        <th>ExpiredAmount</th>
                     </tr>";
         foreach ($credits as $credit) {
             $usable = $credit->isUsable() ? 'yes' : 'no';
@@ -215,7 +214,6 @@ table th {
                         <td>{$usable}</td>
                         <td>{$credit->createdAt->format(DateTimeProvider::FORMAT)}</td>
                         <td>{$credit->getFullyUsedAt()?->format(DateTimeProvider::FORMAT)}</td>
-                        <td>{$credit->getExpiredAmount()}</td>
                     </tr>";
         }
         $body .= '</table>';

@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Exception\UserNotFoundException;
 use App\Facade\AddCreditFacade;
 use App\Input\AddCreditInput;
+use App\Native\NativeAddCredit;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -17,15 +18,19 @@ use Throwable;
 
 class AddCreditController extends AbstractController
 {
-    public function __construct(private AddCreditFacade $addCreditFacade, private LoggerInterface $logger)
-    {
+    public function __construct(
+        private AddCreditFacade $addCreditFacade,
+        private NativeAddCredit $nativeAddCredit,
+        private LoggerInterface $logger,
+    ) {
     }
 
     #[Route(path: 'v1/credit', name: 'addCredit', methods: ['POST'])]
     public function addCreditAction(#[MapRequestPayload] AddCreditInput $input): Response
     {
         try {
-            $this->addCreditFacade->addCredits($input);
+            $this->nativeAddCredit->addCredit($input);
+//            $this->addCreditFacade->addCredits($input);
             return new JsonResponse('Ok', Response::HTTP_CREATED);
         } catch (UserNotFoundException) {
             return new JsonResponse("Unknown user `{$input->userExternalId->toString()}`", Response::HTTP_NOT_FOUND);

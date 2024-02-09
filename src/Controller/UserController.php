@@ -35,7 +35,7 @@ class UserController extends AbstractController
             );
         } catch (Throwable $e) {
             $this->logger->error($e->getMessage(), $e->getTrace());
-            return new JsonResponse($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse('Error: ' . $e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

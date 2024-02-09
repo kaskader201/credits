@@ -7,11 +7,8 @@ use App\Entity\Id\User\UserUuidType;
 use App\Entity\User;
 use App\Provider\DateTimeProvider;
 use DateTimeImmutable;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ManagerRegistry;
 
 readonly class CreditRepository
 {

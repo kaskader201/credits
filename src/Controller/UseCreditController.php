@@ -8,6 +8,7 @@ use App\Exception\BalanceToLowException;
 use App\Exception\UserNotFoundException;
 use App\Facade\UseCreditFacade;
 use App\Input\UseCreditInput;
+use App\Native\NativeUseCredit;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,7 +19,11 @@ use Throwable;
 
 class UseCreditController extends AbstractController
 {
-    public function __construct(private UseCreditFacade $useCreditFacade, private LoggerInterface $logger)
+    public function __construct(
+        private UseCreditFacade $useCreditFacade,
+        private NativeUseCredit $nativeUseCredit,
+        private LoggerInterface $logger,
+    )
     {
     }
 
@@ -26,7 +31,8 @@ class UseCreditController extends AbstractController
     public function useCreaditAction(#[MapRequestPayload] UseCreditInput $input): Response
     {
         try {
-            $this->useCreditFacade->useCredits($input);
+            $this->nativeUseCredit->useCredits($input);
+//            $this->useCreditFacade->useCredits($input);
             return new JsonResponse('Ok', Response::HTTP_CREATED);
         } catch (UserNotFoundException) {
             return new JsonResponse("Unknown user `{$input->userExternalId->toString()}`", Response::HTTP_NOT_FOUND);

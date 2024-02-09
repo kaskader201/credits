@@ -3,7 +3,6 @@
 namespace App\Service;
 
 use App\Entity\Id\Request\RequestUuid;
-use App\Entity\Request;
 use App\Entity\Transaction;
 use App\Enum\TransactionActionType;
 use App\Exception\UserNotFoundException;
@@ -43,7 +42,7 @@ final readonly class UseCreditService
                 $user = $this->userRepository->getByExternalId($userExternalId);
                 $credits = $this->creditRepository->findAllUsableSorted($user);
 
-                $totalOfAmount = $amount;
+                $totalOfAmount = $amount->abs();
                 foreach ($credits as $credit) {
                     $usableAmount = $this->creditService->getUsableAmountOfCredit($credit);
                     if ($totalOfAmount->isGreaterThanOrEqualTo($usableAmount)) {
